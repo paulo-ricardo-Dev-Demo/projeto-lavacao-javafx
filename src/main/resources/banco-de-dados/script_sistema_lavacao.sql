@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS db_vendas;
-USE db_vendas;
+CREATE DATABASE IF NOT EXISTS db_lavacao;
+USE db_lavacao;
 
 CREATE TABLE cor (
     id INT NOT NULL AUTO_INCREMENT,
