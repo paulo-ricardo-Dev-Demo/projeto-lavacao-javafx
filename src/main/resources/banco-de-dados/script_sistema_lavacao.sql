@@ -8,6 +8,13 @@ CREATE TABLE cor (
             PRIMARY KEY(id)
 ) engine = InnoDB;
 
+CREATE TABLE marca (
+    id INT NOT NULL AUTO_INCREMENT,
+    nome varchar(25) not null,
+    CONSTRAINT pk_cor
+    PRIMARY KEY(id)
+) engine = InnoDB;
+
 CREATE TABLE categoria(
    id int NOT NULL auto_increment,
    descricao  varchar(50) NOT NULL,

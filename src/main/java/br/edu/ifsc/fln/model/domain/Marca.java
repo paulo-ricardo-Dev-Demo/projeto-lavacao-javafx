@@ -3,7 +3,7 @@ package br.edu.ifsc.fln.model.domain;
 import java.util.Objects;
 
 public class Marca {
-    private long id;
+    private int id;
     private String nome;
 
     //Métodos construtores
@@ -13,13 +13,13 @@ public class Marca {
         this.nome = nome;
     }
 
-    public Marca(long id, String nome) {
+    public Marca(int id, String nome) {
         this.id = id;
         this.nome = nome;
     }
 
     //Getters
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -28,7 +28,7 @@ public class Marca {
     }
 
     //Setters
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
