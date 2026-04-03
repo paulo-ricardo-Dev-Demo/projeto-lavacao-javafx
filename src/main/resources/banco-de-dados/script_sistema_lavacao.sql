@@ -15,6 +15,20 @@ CREATE TABLE marca (
     PRIMARY KEY(id)
 ) engine = InnoDB;
 
+CREATE TABLE servico (
+    id INT NOT NULL AUTO_INCREMENT,
+    descricao VARCHAR(100) NOT NULL,
+    valor DECIMAL NOT NULL,
+    CONSTRAINT pk_servico
+    PRIMARY KEY(id)
+) engine = InnoDB;
+
+CREATE TABLE PARAMETROS_DE_SISTEMA (
+    id int not null,
+    pontos int not null,
+    constraint primary key(id)
+) engine=InnoDB;
+
 CREATE TABLE categoria(
    id int NOT NULL auto_increment,
    descricao  varchar(50) NOT NULL,
