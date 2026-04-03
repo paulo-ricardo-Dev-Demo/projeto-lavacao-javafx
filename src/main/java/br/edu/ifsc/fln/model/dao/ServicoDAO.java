@@ -37,16 +37,12 @@ public class ServicoDAO {
     }
 
     public boolean alterar(Servico servico) {
-        String sql1 = "UPDATE servico SET descricao=? WHERE id=?";
-        String sql2 = "UPDATE servico SET valor=? WHERE id=?";
+        String sql = "UPDATE servico SET descricao=?,valor=? WHERE id=?";
         try {
-            PreparedStatement stmt = connection.prepareStatement(sql1);
+            PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, servico.getDescricao());
-            stmt.setInt(2, servico.getId());
-            stmt.execute();
-            stmt = connection.prepareStatement(sql2);
-            stmt.setString(1, servico.getDescricao());
-            stmt.setInt(2, servico.getId());
+            stmt.setDouble(2, servico.getValor());
+            stmt.setInt(3, servico.getId());
             stmt.execute();
 
             return true;
@@ -72,9 +68,13 @@ public class ServicoDAO {
     public List<Servico> listar() {
         String sql = "SELECT * FROM servico";
         List<Servico> retorno = new ArrayList<>();
+
+        Servico.setPontos(buscarPontos());
+
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             ResultSet resultado = stmt.executeQuery();
+
             while (resultado.next()) {
                 Servico servico = new Servico();
                 servico.setId(resultado.getInt("id"));
@@ -87,6 +87,40 @@ public class ServicoDAO {
         }
         return retorno;
     }
+
+    public int buscarPontos() {
+        String sql = "SELECT pontos FROM parametros_de_sistema WHERE chave=?";
+        int pontos = 0;
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setString(1,"pontos");
+            ResultSet resultado = stmt.executeQuery();
+            if (resultado.next()) {
+                pontos = resultado.getInt("pontos");
+            }
+        }
+         catch (SQLException ex) {
+            Logger.getLogger(ServicoDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return pontos;
+    }
+
+    public boolean alterarPontos(int pontos) {
+        String sql = "UPDATE parametros_de_sistema SET pontos=?  WHERE chave='pontos'";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1,pontos);
+            ResultSet resultado = stmt.executeQuery();
+
+            return true;
+        }
+        catch (SQLException ex) {
+            Logger.getLogger(ServicoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
 
     public Servico buscar(Servico servico) {
         Servico retorno = buscar(servico.getId());

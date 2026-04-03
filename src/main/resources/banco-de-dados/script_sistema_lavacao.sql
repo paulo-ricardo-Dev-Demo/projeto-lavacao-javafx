@@ -24,9 +24,9 @@ CREATE TABLE servico (
 ) engine = InnoDB;
 
 CREATE TABLE PARAMETROS_DE_SISTEMA (
-    id int not null,
+    chave varchar(15) not null,
     pontos int not null,
-    constraint primary key(id)
+    constraint primary key(chave)
 ) engine=InnoDB;
 
 CREATE TABLE categoria(
@@ -64,6 +64,15 @@ CREATE TABLE cliente(
 INSERT INTO cor(nome)
 VALUES ('Vermelho');
 
+INSERT INTO marca(nome)
+VALUES ('Chevrolet');
+
+insert into servico(descricao, valor) values ('polimento',100);
+
+insert into parametros_de_sistema values ('pontos',0);
+
+
+
 INSERT INTO cliente(nome, cpf, telefone, email, endereco, data_nascimento) VALUES('Edgar','111.111.111-11','(11) 1111-1111', 'edgar@ifsc.edu.br', 'av. mauro ramos', '1970-04-20');
 INSERT INTO cliente(nome, cpf, telefone, email, endereco, data_nascimento) VALUES('Marilene','222.222.222-22','(22) 2222-2121', 'marilene@ifsc.edu.br', 'av. mauro ramos', '1979-10-18');
 INSERT INTO cliente(nome, cpf, telefone, email, endereco, data_nascimento) VALUES('Carla','333.333.333-33','(33) 3333-3333', 'carla@ifsc.edu.br', 'av. mauro ramos', '1986-12-12');
@@ -75,3 +84,4 @@ INSERT INTO produto(nome, descricao, preco, id_categoria) VALUES('TV 32 LG', 'TV
 INSERT INTO produto(nome, descricao, preco, id_categoria) VALUES('TV 40 SAMSUNG', 'TV Tela Plana 42 4k', '3000.00', '1');
 INSERT INTO produto(nome, descricao, preco, id_categoria) VALUES('TÊNIS NIKE', 'Tênis Nike Tri Fusion Run 40', '550.50', '2');
 INSERT INTO produto(nome, descricao, preco, id_categoria) VALUES('TÊNIS ADIDAS', 'Tênis Adidas Run Ultraboost', '750.00', '2');
+

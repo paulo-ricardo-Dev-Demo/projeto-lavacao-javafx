@@ -97,10 +97,12 @@ public class FXMLAnchorPaneCadastroServicoController implements Initializable {
             lbServicoId.setText(String.valueOf(servico.getId()));
             lbServicoDescricao.setText(servico.getDescricao());
             lbServicoValor.setText(String.valueOf(servico.getValor()));
+            lbServicoPontos.setText(String.valueOf(servico.getPontos()));
         } else {
             lbServicoId.setText("");
             lbServicoDescricao.setText("");
             lbServicoValor.setText("");
+            lbServicoPontos.setText("");
         }
 
     }

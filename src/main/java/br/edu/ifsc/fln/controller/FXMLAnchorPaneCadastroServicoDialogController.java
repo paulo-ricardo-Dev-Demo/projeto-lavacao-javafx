@@ -92,7 +92,7 @@ public class FXMLAnchorPaneCadastroServicoDialogController implements Initializa
     //método para validar a entrada de dados
     private boolean validarEntradaDeDados() {
         String errorMessage = "";
-        if (this.tfDescricao.getText() == null || this.tfDescricao.getText().length() == 0  || this.tfValor.getText() == null || this.tfValor.getText().length() == 0) {
+        if ((this.tfDescricao.getText() == null) || (this.tfDescricao.getText().length() == 0) || (this.tfValor.getText() == null) || (this.tfValor.getText().length() == 0)) {
             errorMessage += "Descrição inválida.\n";
         }
 
