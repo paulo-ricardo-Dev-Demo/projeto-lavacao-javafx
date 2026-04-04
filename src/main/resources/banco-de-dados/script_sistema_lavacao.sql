@@ -69,8 +69,7 @@ VALUES ('Chevrolet');
 
 insert into servico(descricao, valor) values ('polimento',100);
 
-insert into parametros_de_sistema values ('pontos',0);
-
+insert into parametros_de_sistema values ('pontos',20);
 
 
 INSERT INTO cliente(nome, cpf, telefone, email, endereco, data_nascimento) VALUES('Edgar','111.111.111-11','(11) 1111-1111', 'edgar@ifsc.edu.br', 'av. mauro ramos', '1970-04-20');

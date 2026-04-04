@@ -34,6 +34,9 @@ public class FXMLAnchorPaneCadastroServicoDialogController implements Initializa
     @FXML
     private TextField tfValor;
 
+    @FXML
+    private TextField tfPontos;
+
     private Stage dialogStage;
     private boolean btConfirmarClicked = false;
     private Servico servico;
@@ -92,7 +95,7 @@ public class FXMLAnchorPaneCadastroServicoDialogController implements Initializa
     //método para validar a entrada de dados
     private boolean validarEntradaDeDados() {
         String errorMessage = "";
-        if ((this.tfDescricao.getText() == null) || (this.tfDescricao.getText().length() == 0) || (this.tfValor.getText() == null) || (this.tfValor.getText().length() == 0)) {
+        if ((this.tfDescricao.getText().equals("")) || (this.tfValor.getText().equals(""))) {
             errorMessage += "Descrição inválida.\n";
         }
 
