@@ -88,6 +88,20 @@ public class ServicoDAO {
         return retorno;
     }
 
+    public boolean alterarPontos() {
+        String sql = "UPDATE parametros_de_sistema SET pontos=? WHERE chave='pontos' ";
+        try {
+            PreparedStatement stmt = connection.prepareStatement(sql);
+            stmt.setInt(1, Servico.getPontos());
+            stmt.execute();
+
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ServicoDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+    }
+
     public int buscarPontos() {
         String sql = "SELECT pontos FROM parametros_de_sistema WHERE chave=?";
         int pontos = 0;

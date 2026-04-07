@@ -23,10 +23,10 @@ CREATE TABLE servico (
     PRIMARY KEY(id)
 ) engine = InnoDB;
 
-CREATE TABLE PARAMETROS_DE_SISTEMA (
+CREATE TABLE parametros_de_sistema (
     chave varchar(15) not null,
     pontos int not null,
-    constraint primary key(chave)
+    constraint pk_parametros_de_sistema primary key(chave)
 ) engine=InnoDB;
 
 CREATE TABLE categoria(
@@ -70,7 +70,6 @@ VALUES ('Chevrolet');
 insert into servico(descricao, valor) values ('polimento',100);
 
 insert into parametros_de_sistema values ('pontos',20);
-
 
 INSERT INTO cliente(nome, cpf, telefone, email, endereco, data_nascimento) VALUES('Edgar','111.111.111-11','(11) 1111-1111', 'edgar@ifsc.edu.br', 'av. mauro ramos', '1970-04-20');
 INSERT INTO cliente(nome, cpf, telefone, email, endereco, data_nascimento) VALUES('Marilene','222.222.222-22','(22) 2222-2121', 'marilene@ifsc.edu.br', 'av. mauro ramos', '1979-10-18');
