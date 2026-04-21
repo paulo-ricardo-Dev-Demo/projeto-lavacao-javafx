@@ -24,7 +24,7 @@ CREATE TABLE servico (
 ) engine = InnoDB;
 
 CREATE TABLE parametros_de_sistema (
-    chave varchar(15) not null,
+    chave char(6) not null,
     pontos int not null,
     constraint pk_parametros_de_sistema primary key(chave)
 ) engine=InnoDB;
