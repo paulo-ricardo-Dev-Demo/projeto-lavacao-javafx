@@ -1,8 +1,9 @@
 package br.edu.ifsc.fln.model.report;
 
-import domain.Cliente;
-import domain.PessoaFisica;
-import domain.PessoaJuridica;
+import br.edu.ifsc.fln.model.domain.Cliente;
+import br.edu.ifsc.fln.model.domain.Cliente;
+import br.edu.ifsc.fln.model.domain.PessoaFisica;
+import br.edu.ifsc.fln.model.domain.PessoaJuridica;
 
 public class Relatorio {
     public String imprimir(Cliente cliente) {

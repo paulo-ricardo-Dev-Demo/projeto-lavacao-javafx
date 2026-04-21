@@ -1,7 +1,7 @@
 package br.edu.ifsc.fln.model.report;
 
-import domain.*;
-import exceptions.ExceptionLavacao;
+import br.edu.ifsc.fln.model.domain.*;
+import br.edu.ifsc.fln.model.exceptions.ExceptionLavacao;
 
 public class ImpressaoOS {
     public String imprimirOS(OrdemServico os) throws ExceptionLavacao {

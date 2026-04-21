@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import br.edu.ifsc.fln.model.domain.ECategoria;
 import br.edu.ifsc.fln.model.domain.Servico;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -48,6 +49,9 @@ public class FXMLAnchorPaneCadastroServicoController implements Initializable {
 
     @FXML
     private Label lbServicoPontos;
+
+    @FXML
+    private Label lbServicoCategoria;
 
     @FXML
     private Label lbServicoValor;
@@ -97,6 +101,7 @@ public class FXMLAnchorPaneCadastroServicoController implements Initializable {
             lbServicoId.setText(String.valueOf(servico.getId()));
             lbServicoDescricao.setText(servico.getDescricao());
             lbServicoValor.setText(String.valueOf(servico.getValor()));
+            lbServicoCategoria.setText(servico.getCategoria().getTamanho());
             lbServicoPontos.setText(String.valueOf(Servico.getPontos()));
         } else {
             lbServicoId.setText("");
@@ -110,6 +115,9 @@ public class FXMLAnchorPaneCadastroServicoController implements Initializable {
     @FXML
     public void handleBtInserir() throws IOException {
         Servico servico = new Servico();
+        if (servico.getCategoria() == null) {
+            servico.setCategoria(ECategoria.PADRAO);
+        }
         boolean btConfirmarClicked = showFXMLAnchorPaneCadastroServicoDialogController(servico);
         if (btConfirmarClicked) {
             servicoDAO.inserir(servico);

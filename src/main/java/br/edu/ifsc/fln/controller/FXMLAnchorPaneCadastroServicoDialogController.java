@@ -7,11 +7,13 @@ package br.edu.ifsc.fln.controller;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import br.edu.ifsc.fln.model.domain.ECategoria;
 import br.edu.ifsc.fln.model.domain.Servico;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -37,6 +39,9 @@ public class FXMLAnchorPaneCadastroServicoDialogController implements Initializa
     @FXML
     private TextField tfPontos;
 
+    @FXML
+    private ChoiceBox<String> cbCategoria;
+
     private Stage dialogStage;
     private boolean btConfirmarClicked = false;
     private Servico servico;
@@ -46,7 +51,13 @@ public class FXMLAnchorPaneCadastroServicoDialogController implements Initializa
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        String[] categorias = {"GRANDE", "MEDIO", "PEQUENO", "MOTO", "PADRAO"};
+
+        //Adicionando os tipos de enum aos itens do ChoiceBox
+        cbCategoria.getItems().addAll(categorias);
+
+        //Definindo qual item aparecerá selecionado por padrão
+        cbCategoria.setValue("PADRAO");
     }
 
     public boolean isBtConfirmarClicked() {
@@ -73,6 +84,7 @@ public class FXMLAnchorPaneCadastroServicoDialogController implements Initializa
         this.servico = servico;
         this.tfDescricao.setText(servico.getDescricao());
         this.tfValor.setText(String.valueOf(servico.getValor()));
+        this.cbCategoria.setValue(servico.getCategoria().name());
     }
 
 
@@ -81,6 +93,7 @@ public class FXMLAnchorPaneCadastroServicoDialogController implements Initializa
         if (validarEntradaDeDados()) {
             servico.setDescricao(tfDescricao.getText());
             servico.setValor(Double.parseDouble(tfValor.getText()));
+            servico.setCategoria(Enum.valueOf(ECategoria.class, cbCategoria.getValue()));
 
             btConfirmarClicked = true;
             dialogStage.close();

@@ -1,6 +1,6 @@
 package br.edu.ifsc.fln.model.domain;
 
-import exceptions.ExceptionLavacao;
+import br.edu.ifsc.fln.model.exceptions.ExceptionLavacao;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

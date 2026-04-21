@@ -9,12 +9,20 @@ public class Servico {
 
     private static int pontos;
 
+    private ECategoria categoria;
+
     public Servico() {
     }
 
     public Servico(String descricao, double valor) {
         this.descricao = descricao;
         this.valor = valor;
+    }
+
+    public Servico(String descricao, double valor, ECategoria categoria) {
+        this.descricao = descricao;
+        this.valor = valor;
+        this.categoria = categoria;
     }
 
     public int getId() {
@@ -28,6 +36,8 @@ public class Servico {
     public String getDescricao() {
         return descricao;
     }
+
+
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
@@ -47,6 +57,14 @@ public class Servico {
 
     public static void setPontos(int pontos) {
         Servico.pontos = pontos;
+    }
+
+    public ECategoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(ECategoria categoria) {
+        this.categoria = categoria;
     }
 
     @Override

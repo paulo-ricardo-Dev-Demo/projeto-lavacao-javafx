@@ -19,6 +19,7 @@ CREATE TABLE servico (
     id INT NOT NULL AUTO_INCREMENT,
     descricao VARCHAR(100) NOT NULL,
     valor DECIMAL NOT NULL,
+    categoria ENUM('PEQUENO','MEDIO','GRANDE', 'MOTO', 'PADRAO') NOT NULL DEFAULT 'PADRAO',
     CONSTRAINT pk_servico
     PRIMARY KEY(id)
 ) engine = InnoDB;
