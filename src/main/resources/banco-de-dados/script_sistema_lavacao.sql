@@ -11,7 +11,7 @@ CREATE TABLE cor (
 CREATE TABLE marca (
     id INT NOT NULL AUTO_INCREMENT,
     nome varchar(25) not null,
-    CONSTRAINT pk_cor
+    CONSTRAINT pk_marca
     PRIMARY KEY(id)
 ) engine = InnoDB;
 
@@ -30,6 +30,16 @@ CREATE TABLE parametros_de_sistema (
     constraint pk_parametros_de_sistema primary key(chave)
 ) engine=InnoDB;
 
+CREATE TABLE modelo (
+    id INT NOT NULL AUTO_INCREMENT,
+    descricao VARCHAR(100) NOT NULL,
+    marca_id int NOT NULL references marca(id),
+    categoria ENUM('PEQUENO','MEDIO','GRANDE', 'MOTO', 'PADRAO') NOT NULL DEFAULT 'PADRAO',
+    potencia int not null,
+    tipo_combustivel ENUM('GASOLINA','ETANOL','FLEX','DIESEL','GNV','OUTRO') NOT NULL DEFAULT 'GASOLINA',
+    CONSTRAINT pk_modelo PRIMARY KEY(id)
+) engine = InnoDB;
+
 INSERT INTO cor(nome)
 VALUES ('Vermelho');
 
@@ -39,3 +49,6 @@ VALUES ('Chevrolet');
 insert into servico(descricao, valor) values ('polimento',100);
 
 insert into parametros_de_sistema values ('pontos',20);
+
+insert into modelo(descricao, marca_id, categoria, potencia, tipo_combustivel) values
+        ("Maserati MC20", 1,'MEDIO',630, 'GASOLINA');

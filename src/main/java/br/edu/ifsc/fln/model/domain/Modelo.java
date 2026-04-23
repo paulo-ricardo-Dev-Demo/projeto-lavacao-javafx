@@ -1,5 +1,7 @@
 package br.edu.ifsc.fln.model.domain;
 
+import java.util.Objects;
+
 public class Modelo {
     private int id;
     private String descricao;
@@ -8,10 +10,10 @@ public class Modelo {
     private ECategoria categoria;
 
     //agregação
-    private Motor motor = new Motor();
+    private Motor motor;
 
     //unidirecional
-    private Marca marca;
+    private Marca marca = new Marca();
 
     public Modelo() {}
 
@@ -75,5 +77,17 @@ public class Modelo {
                 ", motor=" + motor +
                 ", marca=" + marca +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Modelo modelo = (Modelo) o;
+        return id == modelo.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
