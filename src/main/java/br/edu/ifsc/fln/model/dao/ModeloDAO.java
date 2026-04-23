@@ -50,6 +50,7 @@ public class ModeloDAO {
             stmt.setString(3,modelo.getCategoria().name());
             stmt.setInt(4,modelo.getMotor().getPotencia());
             stmt.setString(5,modelo.getMotor().getTipoCombustivel().name());
+            stmt.setInt(6,modelo.getId());
             stmt.execute();
 
             return true;
@@ -115,7 +116,7 @@ public class ModeloDAO {
         mdl.categoria AS categoria_modelo,
         mdl.potencia AS potencia_motor,
         mdl.tipo_combustivel AS combustivel_motor
-        FROM modelo mdl INNER JOIN marca mrc ON mdl.marca_id = mrc.id WHERE mdl.id=? ORDER BY mdl.id  
+        FROM modelo mdl INNER JOIN marca mrc ON mdl.marca_id = mrc.id WHERE mdl.id=?
         """;
 
         Modelo modelo = new Modelo();
@@ -149,4 +150,3 @@ public class ModeloDAO {
         return modelo;
     }
 }
-

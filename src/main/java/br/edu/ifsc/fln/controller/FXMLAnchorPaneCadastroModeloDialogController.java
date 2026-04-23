@@ -5,10 +5,14 @@
 package br.edu.ifsc.fln.controller;
 
 import java.net.URL;
+import java.sql.Connection;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import br.edu.ifsc.fln.model.dao.MarcaDAO;
+import br.edu.ifsc.fln.model.dao.ModeloDAO;
+import br.edu.ifsc.fln.model.database.Database;
+import br.edu.ifsc.fln.model.database.DatabaseFactory;
 import br.edu.ifsc.fln.model.domain.ECategoria;
 import br.edu.ifsc.fln.model.domain.ETipoCombustivel;
 import br.edu.ifsc.fln.model.domain.Marca;
@@ -53,16 +57,21 @@ public class FXMLAnchorPaneCadastroModeloDialogController implements Initializab
     private boolean btConfirmarClicked = false;
     private Modelo modelo;
 
+    private final Database database = DatabaseFactory.getDatabase("mysql");
+    private final Connection connection = database.conectar();
+    private final MarcaDAO marcaDAO = new MarcaDAO();
+
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        marcaDAO.setConnection(connection);
+
+        List<Marca> marcas = marcaDAO.listar();
+
         String[] categorias = {"GRANDE", "MEDIO", "PEQUENO", "MOTO", "PADRAO"};
         String[] combustiveis = {"GASOLINA", "DIESEL", "GNV", "ETANOL", "FLEX", "OUTRO"};
-
-        MarcaDAO marcaDAO = new MarcaDAO();
-        List<Marca> marcas = marcaDAO.listar();
 
         //Adicionando os tipos de enum aos itens do ChoiceBox
         cbCategoria.getItems().addAll(categorias);
@@ -72,7 +81,6 @@ public class FXMLAnchorPaneCadastroModeloDialogController implements Initializab
         //Definindo qual item aparecerá selecionado por padrão
         cbCategoria.setValue("PADRAO");
         cbCombustivel.setValue("GASOLINA");
-        cbMarca.getSelectionModel().select(0);
     }
 
     public boolean isBtConfirmarClicked() {
@@ -100,6 +108,10 @@ public class FXMLAnchorPaneCadastroModeloDialogController implements Initializab
         this.tfDescricao.setText(modelo.getDescricao());
         this.tfPotencia.setText(String.valueOf(modelo.getMotor().getPotencia()));
         this.cbCategoria.setValue(modelo.getCategoria().name());
+
+        if (modelo.getMotor().getTipoCombustivel() == null) {
+            modelo.getMotor().setTipoCombustivel(ETipoCombustivel.GASOLINA);
+        }
         this.cbCombustivel.setValue(modelo.getMotor().getTipoCombustivel().name());
         this.cbMarca.setValue(modelo.getMarca());
     }

@@ -37,8 +37,6 @@ public class Servico {
         return descricao;
     }
 
-
-
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }

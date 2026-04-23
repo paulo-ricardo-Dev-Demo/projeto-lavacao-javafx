@@ -38,9 +38,7 @@ public class Marca {
 
     @Override
     public String toString() {
-        return "Marca{" +
-                ", marca='" + nome + '\'' +
-                '}';
+        return nome;
     }
 
     public boolean equals(Object object) {

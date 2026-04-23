@@ -1,12 +1,12 @@
 package br.edu.ifsc.fln.model.domain;
 
 public enum ETipoCombustivel {
-    GASOLINA("Gasolina"),
-    ETANOL("Etanol"),
-    FLEX("Flex"),
-    DIESEL("Diesel"),
+    GASOLINA("GASOLINA"),
+    ETANOL("ETANOL"),
+    FLEX("FLEX"),
+    DIESEL("DIESEL"),
     GNV("GNV"),
-    OUTRO("Outro");
+    OUTRO("OUTRO");
 
     private String nome;
 
