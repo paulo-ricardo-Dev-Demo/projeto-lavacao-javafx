@@ -10,7 +10,7 @@ public class Modelo {
     private ECategoria categoria;
 
     //agregação
-    private Motor motor;
+    private Motor motor = new Motor();
 
     //unidirecional
     private Marca marca = new Marca();

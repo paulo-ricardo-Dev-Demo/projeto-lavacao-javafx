@@ -21,6 +21,8 @@ import javafx.scene.layout.AnchorPane;
  */
 public class FXMLVBoxMainAppController implements Initializable {
     @FXML
+    private MenuItem menuItemCadastroModelo;
+    @FXML
     private MenuItem menuItemCadastroServico;
     @FXML
     private MenuItem menuItemCadastroMarca;
@@ -54,6 +56,14 @@ public class FXMLVBoxMainAppController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
     }
+
+    @FXML
+    public void handleMenuItemCadastroModelo() throws IOException {
+        AnchorPane a = (AnchorPane) FXMLLoader.load(getClass().getResource("/view/FXMLAnchorPaneCadastroModelo.fxml"));
+        anchorPane.getChildren().setAll(a);
+    }
+
+
 
     @FXML
     public void handleMenuItemCadastroServico() throws IOException {

@@ -13,7 +13,7 @@
         <menus>
           <Menu mnemonicParsing="false" text="Cadastros">
             <items>
-                  <MenuItem fx:id="menuItemCadastroModelo" mnemonicParsing="false" onAction="#handleMenuItemCadastroServico" text="Modelo" />
+                  <MenuItem fx:id="menuItemCadastroModelo" mnemonicParsing="false" onAction="#handleMenuItemCadastroModelo" text="Modelo" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="menuItemCadastroServico" mnemonicParsing="false" onAction="#handleMenuItemCadastroServico" text="Serviço" />
                   <SeparatorMenuItem mnemonicParsing="false" />

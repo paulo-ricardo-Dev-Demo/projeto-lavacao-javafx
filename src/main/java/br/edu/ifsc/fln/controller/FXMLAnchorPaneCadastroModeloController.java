@@ -120,7 +120,7 @@ public class FXMLAnchorPaneCadastroModeloController implements Initializable {
     public void handleBtInserir() throws IOException {
         Modelo modelo = new Modelo();
         modelo.setCategoria(ECategoria.PADRAO);
-        
+
         boolean btConfirmarClicked = showFXMLAnchorPaneCadastroModeloDialogController(modelo);
         if (btConfirmarClicked) {
             modeloDAO.inserir(modelo);
@@ -139,7 +139,7 @@ public class FXMLAnchorPaneCadastroModeloController implements Initializable {
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Esta operação requer a seleção \nde uma Serviço na tabela ao lado");
+            alert.setContentText("Esta operação requer a seleção \nde uma Modelo na tabela ao lado");
             alert.show();
         }
     }
@@ -160,7 +160,8 @@ public class FXMLAnchorPaneCadastroModeloController implements Initializable {
     private boolean showFXMLAnchorPaneCadastroModeloDialogController(Modelo modelo) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(FXMLAnchorPaneCadastroModeloController.class.getResource("/view/FXMLAnchorPaneCadastroModeloDialog.fxml"));
-        AnchorPane page = (AnchorPane) loader.load();
+        AnchorPane page;
+        page = (AnchorPane) loader.load();
 
         //criação de um estágio de diálogo (StageDialog)
         Stage dialogStage = new Stage();
