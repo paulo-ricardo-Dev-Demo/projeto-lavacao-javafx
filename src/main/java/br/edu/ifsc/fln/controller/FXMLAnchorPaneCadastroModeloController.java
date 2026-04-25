@@ -4,7 +4,6 @@
  */
 package br.edu.ifsc.fln.controller;
 
-import br.edu.ifsc.fln.model.dao.MarcaDAO;
 import br.edu.ifsc.fln.model.dao.ModeloDAO;
 import br.edu.ifsc.fln.model.database.Database;
 import br.edu.ifsc.fln.model.database.DatabaseFactory;

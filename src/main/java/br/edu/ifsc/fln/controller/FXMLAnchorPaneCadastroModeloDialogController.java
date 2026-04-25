@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import br.edu.ifsc.fln.model.dao.MarcaDAO;
-import br.edu.ifsc.fln.model.dao.ModeloDAO;
 import br.edu.ifsc.fln.model.database.Database;
 import br.edu.ifsc.fln.model.database.DatabaseFactory;
 import br.edu.ifsc.fln.model.domain.ECategoria;
