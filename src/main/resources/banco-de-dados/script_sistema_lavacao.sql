@@ -74,10 +74,35 @@ CREATE TABLE veiculo (
     placa varchar(20) not null,
     observacoes text,
     id_cliente int not null references cliente(id) ON DELETE CASCADE,
-    id_cor long not null references cor(id),
+    id_cor bigint not null references cor(id),
     id_modelo int not null references modelo(id),
     constraint pk_veiculo primary key(id)
 ) engine = InnoDB;
+
+CREATE TABLE ordem_servico(
+    numero bigint not null auto_increment,
+    total decimal not null,
+    agenda datetime not null,
+    desconto decimal not null default 0,
+    status ENUM('ABERTA','FECHADA','CANCELADA') NOT NULL DEFAULT 'ABERTA',
+    id_veiculo INT NOT NULL,
+    constraint pk_ordem_servico
+        primary key(numero),
+    CONSTRAINT fk_ordem_servico_veiculo
+        FOREIGN KEY (id_veiculo) REFERENCES veiculo(id)
+)engine = InnoDB;
+
+CREATE TABLE item_os (
+    numero_os bigint not null,
+    id_servico int not null,
+    valor_servico double not null,
+    constraint pk_item_os
+        primary key(numero_os),
+    CONSTRAINT fk_item_os_ordem_servico
+        FOREIGN KEY (numero_os) REFERENCES ordem_servico(numero),
+    CONSTRAINT fk_item_os_servico
+        FOREIGN KEY (id_servico) REFERENCES servico(id)
+)engine = InnoDB;
 
 
 INSERT INTO cor(nome)
