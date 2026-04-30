@@ -109,7 +109,7 @@ INSERT INTO cor(nome)
 VALUES ('Vermelho');
 
 INSERT INTO marca(nome)
-VALUES ('Chevrolet');
+VALUES ('Maserati');
 
 insert into servico(descricao, valor) values ('polimento',100);
 
