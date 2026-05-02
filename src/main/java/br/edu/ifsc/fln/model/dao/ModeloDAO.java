@@ -23,40 +23,79 @@ public class ModeloDAO {
         this.connection = connection;
     }
 
-    public boolean inserir(Modelo modelo) {
-        String sql = "INSERT INTO modelo(descricao, marca_id, categoria, potencia, tipo_combustivel) VALUES(?,?,?,?,?)";
+    public void inserir(Modelo modelo) {
+        String sql1 = "INSERT INTO modelo(descricao, marca_id, categoria) VALUES(?,?,?)",
+        sql2 = "INSERT INTO motor(id_modelo, potencia, tipo_combustivel) VALUES((SELECT MAX(id) from modelo),?,?)";
+
         try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            connection.setAutoCommit(false);
+
+            PreparedStatement stmt = connection.prepareStatement(sql1);
             stmt.setString(1, modelo.getDescricao());
             stmt.setInt(2, modelo.getMarca().getId());
             stmt.setString(3,modelo.getCategoria().name());
-            stmt.setInt(4,modelo.getMotor().getPotencia());
-            stmt.setString(5,modelo.getMotor().getTipoCombustivel().name());
             stmt.execute();
-            return true;
-        } catch (SQLException ex) {
+
+            stmt = connection.prepareStatement(sql2);
+            stmt.setInt(1, modelo.getMotor().getPotencia());
+            stmt.setString(2, modelo.getMotor().getTipoCombustivel().name());
+            stmt.execute();
+
+            connection.commit();
+        }
+        catch (SQLException ex) {
             Logger.getLogger(ModeloDAO.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
+
     public boolean alterar(Modelo modelo) {
-        String sql = "UPDATE modelo SET " +
-                "descricao=?, marca_id=?, categoria=?, potencia=?, tipo_combustivel=? WHERE id=?";
+        String sql1 = "UPDATE modelo SET descricao=?, marca_id=?, categoria=? WHERE id=?",
+        sql2 = "UPDATE motor SET potencia=?, tipo_combustivel=? WHERE id_modelo=?";
+
         try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            connection.setAutoCommit(false);
+
+            PreparedStatement stmt = connection.prepareStatement(sql1);
             stmt.setString(1, modelo.getDescricao());
             stmt.setInt(2, modelo.getMarca().getId());
-            stmt.setString(3,modelo.getCategoria().name());
-            stmt.setInt(4,modelo.getMotor().getPotencia());
-            stmt.setString(5,modelo.getMotor().getTipoCombustivel().name());
-            stmt.setInt(6,modelo.getId());
+            stmt.setString(3, modelo.getCategoria().name());
+            stmt.setInt(4,modelo.getId());
+            stmt.execute();
+
+            stmt = connection.prepareStatement(sql2);
+            stmt.setInt(1,modelo.getMotor().getPotencia());
+            stmt.setString(2,modelo.getMotor().getTipoCombustivel().name());
+            stmt.setInt(3, modelo.getId());
             stmt.execute();
 
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(ModeloDAO.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                connection.rollback();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             return false;
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -81,9 +120,10 @@ public class ModeloDAO {
         mdl.id AS id_modelo,
         mdl.descricao AS descricao_modelo,
         mdl.categoria AS categoria_modelo,
-        mdl.potencia AS potencia_motor,
-        mdl.tipo_combustivel AS combustivel_motor
-        FROM modelo mdl INNER JOIN marca mrc ON mdl.marca_id = mrc.id ORDER BY mdl.id
+        mot.potencia AS potencia_motor,
+        mot.tipo_combustivel AS combustivel_motor
+        FROM modelo mdl INNER JOIN marca mrc ON mdl.marca_id = mrc.id
+            INNER JOIN motor mot on mdl.id = mot.id_modelo ORDER BY mdl.id
         """;
 
         List<Modelo> modelos = new ArrayList<>();
@@ -114,9 +154,10 @@ public class ModeloDAO {
         mdl.id AS id_modelo,
         mdl.descricao AS descricao_modelo,
         mdl.categoria AS categoria_modelo,
-        mdl.potencia AS potencia_motor,
-        mdl.tipo_combustivel AS combustivel_motor
-        FROM modelo mdl INNER JOIN marca mrc ON mdl.marca_id = mrc.id WHERE mdl.id=?
+        mot.potencia AS potencia_motor,
+        mot.tipo_combustivel AS combustivel_motor
+        FROM modelo mdl INNER JOIN marca mrc ON mdl.marca_id = mrc.id
+            INNER JOIN motor mot on mdl.id = mot.id_modelo WHERE mdl.id = ?
         """;
 
         Modelo modelo = new Modelo();

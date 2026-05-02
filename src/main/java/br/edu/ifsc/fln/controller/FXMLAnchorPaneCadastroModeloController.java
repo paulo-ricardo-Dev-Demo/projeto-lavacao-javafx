@@ -92,6 +92,7 @@ public class FXMLAnchorPaneCadastroModeloController implements Initializable {
     public void carregarTableViewModelo() {
         tableColumnModeloDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
 
+
         listaModelos = modeloDAO.listar();
 
         observableListModelos = FXCollections.observableArrayList(listaModelos);
@@ -152,7 +153,7 @@ public class FXMLAnchorPaneCadastroModeloController implements Initializable {
             carregarTableViewModelo();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Esta operação requer a seleção \nde uma Serviço na tabela ao lado");
+            alert.setContentText("Esta operação requer a seleção \nde um Modelo na tabela ao lado");
             alert.show();
         }
     }
