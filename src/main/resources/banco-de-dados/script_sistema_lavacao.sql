@@ -36,7 +36,7 @@ CREATE TABLE modelo (
     id INT NOT NULL AUTO_INCREMENT,
     descricao VARCHAR(100) NOT NULL unique,
     categoria ENUM('PEQUENO','MEDIO','GRANDE', 'MOTO', 'PADRAO') NOT NULL DEFAULT 'PADRAO',
-    marca_id int NOT NULL,
+    marca_id INT NOT NULL,
     CONSTRAINT pk_modelo
         PRIMARY KEY(id),
     CONSTRAINT fk_modelo_marca
@@ -57,7 +57,7 @@ CREATE TABLE cliente (
     id INT NOT NULL AUTO_INCREMENT,
     nome VARCHAR(100) NOT NULL,
     celular varchar(20) NOT NULL,
-    email varchar(50) CHECK (email LIKE '%@%.%') unique,
+    email varchar(50) unique,
     data_cadastro datetime,
     CONSTRAINT pk_cliente
         PRIMARY KEY(id)
@@ -65,7 +65,7 @@ CREATE TABLE cliente (
 
 CREATE TABLE pessoa_fisica (
     id_cliente INT NOT NULL,
-    cpf CHAR(14) NOT NULL check (cpf LIKE '___.___.___-__') unique,
+    cpf CHAR(14) NOT NULL unique,
     data_nascimento date,
     CONSTRAINT pk_pessoa_fisica
         PRIMARY KEY(id_cliente),
@@ -75,9 +75,8 @@ CREATE TABLE pessoa_fisica (
 
 CREATE TABLE pessoa_juridica (
     id_cliente INT NOT NULL,
-    cnpj CHAR(18) NOT NULL check (cnpj LIKE '__.___.___/____-__') unique,
-    inscricao_estadual varchar(20)
-        CHECK(length(inscricao_estadual) >= 8 AND inscricao_estadual NOT LIKE '%[a-zA-Z]%'),
+    cnpj CHAR(18) NOT NULL unique,
+    inscricao_estadual varchar(20),
     CONSTRAINT pk_pessoa_juridica PRIMARY KEY(id_cliente),
     CONSTRAINT fk_pessoa_juridica_cliente
         foreign key (id_cliente) references cliente(id) on delete cascade on update cascade
@@ -147,3 +146,22 @@ insert into modelo(descricao, marca_id, categoria) values
 
 insert into motor VALUES ((SELECT MAX(ID) FROM modelo), 630, 'GASOLINA');
 
+insert into cliente(nome, celular, email, data_cadastro) values
+    ('Paulo Ricardo Dalmaso',
+     '48996233286',
+     'paulo.rd2005@aluno.ifsc.edu.br',
+     '2026-05-08 03:23:00');
+insert into pessoa_fisica(id_cliente, cpf, data_nascimento) values ((select max(id) from cliente), '090.909.090-90', '2005-08-24');
+insert into pontuacao(id_cliente, quantidade) values ((SELECT max(id) from cliente), 0);
+
+
+insert into cliente(nome, celular, email, data_cadastro) values
+    ('Panificadora Alfa',
+     '48999999999',
+     'panificadora.alfa@gamail.com',
+     '2026-05-08 03:33:00');
+insert into pessoa_juridica(id_cliente, cnpj, inscricao_estadual) values
+    ((select max(id) from cliente),
+     '00.000.000/0001-00',
+     '110.042.490.114');
+insert into pontuacao(id_cliente, quantidade) values ((SELECT max(id) from cliente), 0);

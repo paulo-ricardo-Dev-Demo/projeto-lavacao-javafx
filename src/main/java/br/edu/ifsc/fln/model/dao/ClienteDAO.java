@@ -7,7 +7,9 @@ import br.edu.ifsc.fln.model.domain.PessoaJuridica;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,20 +30,29 @@ public class ClienteDAO {
     }
 
     public boolean inserir(Cliente cliente) {
-        String sql = "INSERT INTO Cliente(nome, celular, email, data_cadastro) VALUES(?, ?, ?, ?)";
+        String sqlCliente = "INSERT INTO cliente(nome, celular, email, data_cadastro) VALUES(?, ?, ?, ?)";
 
-        String sqlPJ = "INSERT INTO pessoa_juridica(id_cliente, cnpj, inscricao_estadual) VALUES((SELECT max(id) FROM pessoa_juridica), ?, ?)";
+        String sqlPontuacao = "INSERT INTO pontuacao(id_cliente, quantidade) VALUES ((SELECT max(id) FROM cliente), ?)";
 
-        String sqlPF = "INSERT INTO pessoa_fisica(id_cliente, cpf, data_nascimento) VALUES((SELECT max(id) FROM pessoa_fisica), ?, ?)";
+        String sqlPJ = "INSERT INTO pessoa_juridica(id_cliente, cnpj, inscricao_estadual) VALUES ((SELECT max(id) FROM cliente), ?, ?)";
+
+        String sqlPF = "INSERT INTO pessoa_fisica(id_cliente, cpf, data_nascimento) VALUES ((SELECT max(id) FROM cliente), ?, ?)";
         try {
-            //armazena os dados da superclasse
-            PreparedStatement stmt = connection.prepareStatement(sql);
             connection.setAutoCommit(false);
+
+            //armazena os dados da superclasse
+            PreparedStatement stmt = connection.prepareStatement(sqlCliente);
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getCelular());
             stmt.setString(3, cliente.getEmail());
             stmt.setDate(4, Date.valueOf(cliente.getDataCadastro()));
             stmt.execute();
+
+            //armazena os dados de pontuação do cliente
+            stmt = connection.prepareStatement(sqlPontuacao);
+            stmt.setInt(1, cliente.getPontuacao().saldo());
+            stmt.execute();
+
             //armazena os dados da subclasse
             if (cliente instanceof PessoaJuridica) {
                 stmt = connection.prepareStatement(sqlPJ);
@@ -77,38 +88,67 @@ public class ClienteDAO {
     }
 
     public boolean alterar(Cliente cliente) {
-        String sql = "UPDATE cliente SET nome=?, email=?, celular=?,data cadastro=? WHERE id=?";
-        String sqlCP = "UPDATE pessoa_juridica SET cnpj=?, inscricao_estadual=? WHERE id_cliente= ?";
-        String sqlCF = "UPDATE pessoa_fisica SET cpf=?, data_nascimento=? WHERE id_cliente = ?";
+        String sqlCliente =     "UPDATE cliente SET nome=?, celular=?, email=?,data_cadastro=? WHERE id=?";
+        String sqlPontuacao =   "UPDATE pontuacao SET quantidade=? WHERE id_cliente=?";
+        String sqlPF =          "UPDATE pessoa_fisica SET cpf=?, data_nascimento=? WHERE id_cliente = ?";
+        String sqlPJ =          "UPDATE pessoa_juridica SET cnpj=?, inscricao_estadual=? WHERE id_cliente= ?";
+
         try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
+            connection.setAutoCommit(false);
+
+            //update na tabela cliente
+            PreparedStatement stmt = connection.prepareStatement(sqlCliente);
             stmt.setString(1, cliente.getNome());
-            stmt.setString(2, cliente.getEmail());
-            stmt.setString(3, cliente.getCelular());
+            stmt.setString(2, cliente.getCelular());
+            stmt.setString(3, cliente.getEmail());
             stmt.setDate(4, Date.valueOf(cliente.getDataCadastro()));
-            stmt.setInt(4, cliente.getId());
+            stmt.setInt(5, cliente.getId());
             stmt.execute();
-            if (cliente instanceof Nacional) {
-                stmt = connection.prepareStatement(sqlFN);
-                stmt.setString(1, ((Nacional)cliente).getCnpj());
-                stmt.setInt(2, cliente.getId());
+
+            //update na tabela pontuacao
+            stmt = connection.prepareStatement(sqlPontuacao);
+            stmt.setInt(1, cliente.getPontuacao().saldo());
+            stmt.setInt(2, cliente.getId());
+            stmt.execute();
+
+            //update nas tabelas filhas
+            if (cliente instanceof PessoaFisica) {
+                stmt = connection.prepareStatement(sqlPF);
+                stmt.setString(1, ((PessoaFisica)cliente).getCpf());
+                stmt.setDate(2, Date.valueOf(((PessoaFisica)cliente).getDataNascimento()));
+                stmt.setInt(3, cliente.getId());
                 stmt.execute();
             } else {
-                stmt = connection.prepareStatement(sqlFI);
-                stmt.setString(1, ((Internacional)cliente).getNif());
-                stmt.setString(2, ((Internacional)cliente).getPais());
+                stmt = connection.prepareStatement(sqlPJ);
+                stmt.setString(1, ((PessoaJuridica)cliente).getCnpj());
+                stmt.setString(2, ((PessoaJuridica)cliente).getInscricaoEstadual());
                 stmt.setInt(3, cliente.getId());
                 stmt.execute();
             }
             return true;
         } catch (SQLException ex) {
             Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
+
+            try {
+                connection.rollback();
+                System.out.println("rollback executado com sucesso!!!");
+            } catch (SQLException e) {
+                System.out.println("falha na operação roolback...");
+                throw new RuntimeException(e);
+            }
             return false;
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
     public boolean remover(Cliente cliente) {
         String sql = "DELETE FROM cliente WHERE id=?";
+
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setInt(1, cliente.getId());
@@ -121,9 +161,23 @@ public class ClienteDAO {
     }
 
     public List<Cliente> listar() {
-        String sql = "SELECT * FROM cliente f "
-                + "LEFT JOIN nacional n on n.id_cliente = f.id "
-                + "LEFT JOIN internacional i on i.id_cliente = f.id;";
+        String sql = """
+            SELECT
+            c.id as id,
+            c.nome as nome,
+            c.celular as celular,
+            c.email as email,
+            c.data_cadastro as data_cadastro,
+            p.quantidade as saldo_pontuacao,
+            pf.cpf as cpf,
+            pf.data_nascimento as data_nasc,
+            pj.cnpj as cnpj,
+            pj.inscricao_estadual as insc_estadual
+            FROM cliente c
+            INNER JOIN pontuacao p on c.id = p.id_cliente
+            LEFT JOIN pessoa_fisica pf on pf.id_cliente = c.id
+            LEFT JOIN pessoa_juridica pj on pj.id_cliente = c.id
+            """;
         List<Cliente> retorno = new ArrayList<>();
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -139,27 +193,28 @@ public class ClienteDAO {
     }
 
     public Cliente buscar(Cliente cliente) {
-        String sql = "SELECT * FROM cliente f "
-                + "LEFT JOIN nacional n on n.id_cliente = f.id "
-                + "LEFT JOIN internacional i on i.id_cliente = f.id WHERE id=?";
-        Cliente retorno = null;
-        try {
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            stmt.setInt(1, cliente.getId());
-            ResultSet resultado = stmt.executeQuery();
-            if (resultado.next()) {
-                retorno = populateVO(resultado);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(ClienteDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return retorno;
+        return buscar(cliente.getId());
     }
 
     public Cliente buscar(int id) {
-        String sql = "SELECT * FROM cliente f "
-                + "LEFT JOIN nacional n on n.id_cliente = f.id "
-                + "LEFT JOIN internacional i on i.id_cliente = f.id WHERE id=?";
+        String sql = """
+            SELECT
+            c.id as id,
+            c.nome as nome,
+            c.celular as celular,
+            c.email as email,
+            c.data_cadastro as data_cadastro,
+            p.quantidade as saldo_pontuacao,
+            pf.cpf as cpf,
+            pf.data_nascimento as data_nasc,
+            pj.cnpj as cnpj,
+            pj.inscricao_estadual as insc_estadual
+            FROM cliente c
+            INNER JOIN pontuacao p on c.id = p.id_cliente
+            LEFT JOIN pessoa_fisica pf on pf.id_cliente = c.id
+            LEFT JOIN pessoa_juridica pj on pj.id_cliente = c.id WHERE c.id = ?;
+            """;
+
         Cliente retorno = null;
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
@@ -176,20 +231,31 @@ public class ClienteDAO {
 
     private Cliente populateVO(ResultSet rs) throws SQLException {
         Cliente cliente;
-        if (rs.getString("nif") == null || rs.getString("nif").length() <= 0) {
-            //é um cliente nacional
-            cliente = new Nacional();
-            ((Nacional)cliente).setCnpj(rs.getString("cnpj"));
+
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+
+        if (rs.getString("cpf") == null || rs.getString("cpf").length() <= 0) {
+            //é um cliente do tipo pessoa jurídica
+            cliente = new PessoaJuridica();
+            ((PessoaJuridica)cliente).setCnpj(rs.getString("cnpj"));
+            ((PessoaJuridica)cliente).setInscricaoEstadual(rs.getString("insc_estadual"));
         } else {
-            //é um cliente internacional
-            cliente = new Internacional();
-            ((Internacional)cliente).setNif(rs.getString("nif"));
-            ((Internacional)cliente).setPais(rs.getString("pais"));
+            //é um cliente tipo pessoa física
+            cliente = new PessoaFisica();
+            ((PessoaFisica)cliente).setCpf(rs.getString("nif"));
+            ((PessoaFisica)cliente).setDataNascimento(LocalDate.of(rs.getDate("data_nasc", calendar).getYear(),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)));
         }
+
         cliente.setId(rs.getInt("id"));
         cliente.setNome(rs.getString("nome"));
+        cliente.setCelular(rs.getString("celular"));
         cliente.setEmail(rs.getString("email"));
-        cliente.setFone(rs.getString("fone"));
+        cliente.setDataCadastro(LocalDate.of(rs.getDate("data_cadastro", calendar).getYear(),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)));
+
         return cliente;
     }
 }

@@ -23,12 +23,12 @@ public abstract class Cliente implements IDados {
         this.veiculos = new ArrayList<>();
     }
 
-    public Cliente(int id, String nome, String celular, String email) {
+    public Cliente(int id, String nome, String celular, String email, LocalDate dataCadastro) {
         this.id = id;
         this.nome = nome;
         this.celular = celular;
         this.email = email;
-        this.dataCadastro = LocalDate.now();
+        this.dataCadastro = dataCadastro;
         //composição de Pontuacao com Cliente
         this.pontuacao = new Pontuacao();
         this.veiculos = new ArrayList<>();
@@ -110,5 +110,9 @@ public abstract class Cliente implements IDados {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setDataCadastro(LocalDate dataCadastro) {
+        this.dataCadastro = dataCadastro;
     }
 }
