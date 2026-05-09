@@ -73,7 +73,7 @@ public class VeiculoDAO {
     public List<Veiculo> listar() {
         String sql = """
         SELECT
-        v.id as id_veiculo, v.placa as placa_veiculo, v.observacoes as observacoes_veiculo,
+        v.id as id_veiculo, v.placa as placa, v.observacoes as observacoes,
         cor.id as id_cor, cor.nome as nome_cor,
         mdl.id as id_modelo, mdl.descricao as desc_modelo, mdl.categoria as categoria_modelo,
         mot.potencia as potencia, mot.tipo_combustivel as combustivel,
@@ -116,7 +116,7 @@ public class VeiculoDAO {
     public Veiculo buscar(int id) {
         String sql = """
         SELECT
-        v.id as id_veiculo, v.placa as placa_veiculo, v.observacoes as observacoes_veiculo,
+        v.id as id_veiculo, v.placa as placa, v.observacoes as observacoes,
         cor.id as id_cor, cor.nome as nome_cor,
         mdl.id as id_modelo, mdl.descricao as desc_modelo, mdl.categoria as categoria_modelo,
         mot.potencia as potencia, mot.tipo_combustivel as combustivel,
