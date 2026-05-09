@@ -38,7 +38,7 @@
                                 <Font name="System Bold" size="14.0" />
                             </font>
                         </Label>
-                        <GridPane layoutX="18.4" layoutY="59.0" prefHeight="215.0" prefWidth="304.0" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="21.0">
+                        <GridPane layoutX="18.4" layoutY="59.0" prefHeight="229.0" prefWidth="306.0" AnchorPane.leftAnchor="18.0" AnchorPane.rightAnchor="21.0">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="112.7999755859375" minWidth="3.200000000000003" prefWidth="112.7999755859375" />
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="226.40000000000003" minWidth="10.0" prefWidth="190.4000244140625" />
