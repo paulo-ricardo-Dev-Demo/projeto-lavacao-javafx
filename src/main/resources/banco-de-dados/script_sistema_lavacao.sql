@@ -93,17 +93,17 @@ CREATE TABLE pontuacao (
 CREATE TABLE veiculo (
     id int not null auto_increment,
     placa varchar(20) not null,
-    observacoes text,
+    observacoes varchar(200),
     id_cliente int not null,
     id_cor bigint not null,
     id_modelo int not null,
     constraint pk_veiculo primary key(id),
     CONSTRAINT fk_veiculo_cliente
-        foreign key (id_cliente) references cliente(id) on delete cascade on update cascade,
+        foreign key (id_cliente) references cliente(id),
     CONSTRAINT fk_veiculo_cor
-        foreign key (id_cor) references cor(id) on delete cascade on update cascade,
+        foreign key (id_cor) references cor(id),
     CONSTRAINT fk_veiculo_modelo
-        foreign key (id_modelo) references modelo(id) on delete cascade on update cascade
+        foreign key (id_modelo) references modelo(id)
 ) engine = InnoDB;
 
 CREATE TABLE ordem_servico(
@@ -151,8 +151,15 @@ insert into cliente(nome, celular, email, data_cadastro) values
      '48996233286',
      'paulo.rd2005@aluno.ifsc.edu.br',
      '2026-05-08');
-insert into pessoa_fisica(id_cliente, cpf, data_nascimento) values ((select max(id) from cliente), '090.909.090-90', '2005-08-24');
-insert into pontuacao(id_cliente, quantidade) values ((SELECT max(id) from cliente), 0);
+
+insert into pessoa_fisica(id_cliente, cpf, data_nascimento) values
+    ((select max(id) from cliente),
+     '090.909.090-90',
+     '2005-08-24');
+
+insert into pontuacao(id_cliente, quantidade) values
+    ((SELECT max(id) from cliente),
+     0);
 
 
 insert into cliente(nome, celular, email, data_cadastro) values
@@ -160,8 +167,12 @@ insert into cliente(nome, celular, email, data_cadastro) values
      '48999999999',
      'panificadora.alfa@gmail.com',
      '2026-05-08');
+
 insert into pessoa_juridica(id_cliente, cnpj, inscricao_estadual) values
     ((select max(id) from cliente),
      '00.000.000/0001-00',
      '110.042.490.114');
-insert into pontuacao(id_cliente, quantidade) values ((SELECT max(id) from cliente), 0);
+
+insert into pontuacao(id_cliente, quantidade) values
+    ((SELECT max(id) from cliente),
+     0);

@@ -96,6 +96,7 @@ public class Veiculo implements IDados{
 
     public void setCliente(Cliente proprietario) {
         this.proprietario = proprietario;
+        this.proprietario.getVeiculos().add(this);
     }
 
     @Override
