@@ -58,7 +58,7 @@ CREATE TABLE cliente (
     nome VARCHAR(100) NOT NULL,
     celular varchar(20) NOT NULL,
     email varchar(50) unique,
-    data_cadastro datetime,
+    data_cadastro date,
     CONSTRAINT pk_cliente
         PRIMARY KEY(id)
 ) engine = InnoDB;
@@ -150,7 +150,7 @@ insert into cliente(nome, celular, email, data_cadastro) values
     ('Paulo Ricardo Dalmaso',
      '48996233286',
      'paulo.rd2005@aluno.ifsc.edu.br',
-     '2026-05-08 03:23:00');
+     '2026-05-08');
 insert into pessoa_fisica(id_cliente, cpf, data_nascimento) values ((select max(id) from cliente), '090.909.090-90', '2005-08-24');
 insert into pontuacao(id_cliente, quantidade) values ((SELECT max(id) from cliente), 0);
 
@@ -158,8 +158,8 @@ insert into pontuacao(id_cliente, quantidade) values ((SELECT max(id) from clien
 insert into cliente(nome, celular, email, data_cadastro) values
     ('Panificadora Alfa',
      '48999999999',
-     'panificadora.alfa@gamail.com',
-     '2026-05-08 03:33:00');
+     'panificadora.alfa@gmail.com',
+     '2026-05-08');
 insert into pessoa_juridica(id_cliente, cnpj, inscricao_estadual) values
     ((select max(id) from cliente),
      '00.000.000/0001-00',

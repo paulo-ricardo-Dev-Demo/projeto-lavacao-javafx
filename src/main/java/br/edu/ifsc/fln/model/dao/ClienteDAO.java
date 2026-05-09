@@ -45,7 +45,7 @@ public class ClienteDAO {
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getCelular());
             stmt.setString(3, cliente.getEmail());
-            stmt.setDate(4, Date.valueOf(cliente.getDataCadastro()));
+            stmt.setObject(4, cliente.getDataCadastro());
             stmt.execute();
 
             //armazena os dados de pontuação do cliente
@@ -62,7 +62,7 @@ public class ClienteDAO {
             } else {
                 stmt = connection.prepareStatement(sqlPF);
                 stmt.setString(1, ((PessoaFisica)cliente).getCpf());
-                stmt.setDate(2, Date.valueOf(((PessoaFisica)cliente).getDataNascimento()));
+                stmt.setObject(2, ((PessoaFisica)cliente).getDataNascimento());
                 stmt.execute();
             }
             connection.commit();
@@ -88,7 +88,7 @@ public class ClienteDAO {
     }
 
     public boolean alterar(Cliente cliente) {
-        String sqlCliente =     "UPDATE cliente SET nome=?, celular=?, email=?,data_cadastro=? WHERE id=?";
+        String sqlCliente =     "UPDATE cliente SET nome=?, celular=?, email=? WHERE id=?";
         String sqlPontuacao =   "UPDATE pontuacao SET quantidade=? WHERE id_cliente=?";
         String sqlPF =          "UPDATE pessoa_fisica SET cpf=?, data_nascimento=? WHERE id_cliente = ?";
         String sqlPJ =          "UPDATE pessoa_juridica SET cnpj=?, inscricao_estadual=? WHERE id_cliente= ?";
@@ -101,8 +101,7 @@ public class ClienteDAO {
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getCelular());
             stmt.setString(3, cliente.getEmail());
-            stmt.setDate(4, Date.valueOf(cliente.getDataCadastro()));
-            stmt.setInt(5, cliente.getId());
+            stmt.setInt(4, cliente.getId());
             stmt.execute();
 
             //update na tabela pontuacao
@@ -115,7 +114,7 @@ public class ClienteDAO {
             if (cliente instanceof PessoaFisica) {
                 stmt = connection.prepareStatement(sqlPF);
                 stmt.setString(1, ((PessoaFisica)cliente).getCpf());
-                stmt.setDate(2, Date.valueOf(((PessoaFisica)cliente).getDataNascimento()));
+                stmt.setObject(2, ((PessoaFisica)cliente).getDataNascimento());
                 stmt.setInt(3, cliente.getId());
                 stmt.execute();
             } else {
@@ -230,11 +229,11 @@ public class ClienteDAO {
     }
 
     private Cliente populateVO(ResultSet rs) throws SQLException {
-        Cliente cliente;
+        Cliente cliente = null;
 
         Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 
-        if (rs.getString("cpf") == null || rs.getString("cpf").length() <= 0) {
+        if (rs.getString("cpf") == null) {
             //é um cliente do tipo pessoa jurídica
             cliente = new PessoaJuridica();
             ((PessoaJuridica)cliente).setCnpj(rs.getString("cnpj"));
@@ -242,19 +241,15 @@ public class ClienteDAO {
         } else {
             //é um cliente tipo pessoa física
             cliente = new PessoaFisica();
-            ((PessoaFisica)cliente).setCpf(rs.getString("nif"));
-            ((PessoaFisica)cliente).setDataNascimento(LocalDate.of(rs.getDate("data_nasc", calendar).getYear(),
-                    calendar.get(Calendar.MONTH),
-                    calendar.get(Calendar.DAY_OF_MONTH)));
+            ((PessoaFisica)cliente).setCpf(rs.getString("cpf"));
+            ((PessoaFisica)cliente).setDataNascimento(rs.getObject("data_nasc", LocalDate.class));
         }
 
         cliente.setId(rs.getInt("id"));
         cliente.setNome(rs.getString("nome"));
         cliente.setCelular(rs.getString("celular"));
         cliente.setEmail(rs.getString("email"));
-        cliente.setDataCadastro(LocalDate.of(rs.getDate("data_cadastro", calendar).getYear(),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)));
+        cliente.setDataCadastro(rs.getObject("data_cadastro", LocalDate.class));
 
         return cliente;
     }

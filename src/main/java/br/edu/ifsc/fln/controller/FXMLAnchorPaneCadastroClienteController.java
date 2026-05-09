@@ -9,9 +9,7 @@ import br.edu.ifsc.fln.model.database.Database;
 import br.edu.ifsc.fln.model.database.DatabaseFactory;
 import br.edu.ifsc.fln.model.domain.PessoaFisica;
 import br.edu.ifsc.fln.model.domain.PessoaJuridica;
-import br.edu.ifsc.fln.model.domain.Pontuacao;
 import br.edu.ifsc.fln.model.domain.Cliente;
-import br.edu.ifsc.fln.utils.AlertDialog;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
@@ -20,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import br.edu.ifsc.fln.utils.AlertDialog;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,12 +26,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -52,6 +46,12 @@ public class FXMLAnchorPaneCadastroClienteController implements Initializable {
 
     @FXML
     private Button btInserir;
+
+    @FXML
+    private Label lbSubclasse1;
+
+    @FXML
+    private Label lbSubclasse2;
 
     @FXML
     private Label lbClienteEmail;
@@ -84,7 +84,7 @@ public class FXMLAnchorPaneCadastroClienteController implements Initializable {
     private TableColumn<Cliente, String> tableColumnClienteNome;
 
     @FXML
-    private TableColumn<Cliente, String> tableColumnClienteCpfCnpj;
+    private TableColumn<Cliente, String> tableColumnClienteTipo;
 
     @FXML
     private TableColumn<Cliente, String> tableColumnClienteDataCadastro;
@@ -114,17 +114,18 @@ public class FXMLAnchorPaneCadastroClienteController implements Initializable {
 
     public void carregarTableViewCliente() {
         tableColumnClienteNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        tableColumnClienteCpfCnpj.setCellValueFactory(cellData -> {
+        tableColumnClienteDataCadastro.setCellValueFactory(new PropertyValueFactory<>("dataCadastro"));
+        tableColumnClienteTipo.setCellValueFactory(cellData -> {
             Cliente cliente = cellData.getValue();
-            String documento = "";
+            String tipo = "";
 
             if (cliente instanceof PessoaFisica) {
-                documento = ((PessoaFisica) cliente).getCpf();
+                tipo = "Físico";
             } else if (cliente instanceof PessoaJuridica) {
-                documento = ((PessoaJuridica) cliente).getCnpj();
+                tipo = "Jurídico";
             }
 
-            return new SimpleStringProperty(documento);
+            return new SimpleStringProperty(tipo);
         });
         tableColumnClienteDataCadastro.setCellValueFactory(new PropertyValueFactory<>("dataCadastro"));
 
@@ -168,8 +169,8 @@ public class FXMLAnchorPaneCadastroClienteController implements Initializable {
     @FXML
     public void handleBtInserir() throws IOException {
         Cliente cliente = getTipoCliente();
-        if (cliente != null ) {
-            boolean btConfirmarClicked = showFXMLAnchorPaneCadastroClienteDialog(cliente);
+        if (cliente != null) {
+            boolean btConfirmarClicked = showFXMLAnchorPaneCadastroClienteDialogController(cliente);
             if (btConfirmarClicked) {
                 clienteDAO.inserir(cliente);
                 carregarTableViewCliente();
@@ -179,8 +180,8 @@ public class FXMLAnchorPaneCadastroClienteController implements Initializable {
 
     private Cliente getTipoCliente() {
         List<String> opcoes = new ArrayList<>();
-        opcoes.add("Pessoa Jurídica");
         opcoes.add("Pessoa Física");
+        opcoes.add("Pessoa Jurídica");
         ChoiceDialog<String> dialog = new ChoiceDialog<>("Pessoa Física", opcoes);
         dialog.setTitle("Dialogo de Opções");
         dialog.setHeaderText("Escolha o tipo de cliente");
@@ -200,7 +201,7 @@ public class FXMLAnchorPaneCadastroClienteController implements Initializable {
     public void handleBtAlterar() throws IOException {
         Cliente cliente = tableViewClientes.getSelectionModel().getSelectedItem();
         if (cliente != null) {
-            boolean btConfirmarClicked = showFXMLAnchorPaneCadastroClienteDialog(cliente);
+            boolean btConfirmarClicked = showFXMLAnchorPaneCadastroClienteDialogController(cliente);
             if (btConfirmarClicked) {
                 clienteDAO.alterar(cliente);
                 carregarTableViewCliente();
@@ -222,23 +223,24 @@ public class FXMLAnchorPaneCadastroClienteController implements Initializable {
             }
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setContentText("Esta operação requer a seleção \nde uma Cliente na tabela ao lado");
+            alert.setContentText("Esta operação requer a seleção \nde um Cliente na tabela ao lado");
             alert.show();
         }
     }
 
-    private boolean showFXMLAnchorPaneCadastroClienteDialog(Cliente cliente) throws IOException {
+    private boolean showFXMLAnchorPaneCadastroClienteDialogController(Cliente cliente) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(FXMLAnchorPaneCadastroClienteController.class.getResource("/view/FXMLAnchorPaneCadastroClienteDialog.fxml"));
+        loader.setLocation(FXMLAnchorPaneCadastroClienteController.class.getResource
+                ("/view/FXMLAnchorPaneCadastroClienteDialog.fxml"));
         AnchorPane page = (AnchorPane) loader.load();
 
         //criação de um estágio de diálogo (StageDialog)
         Stage dialogStage = new Stage();
-        dialogStage.setTitle("Cadastro de Cliente");
+        dialogStage.setTitle("Cadastro de Clientes");
         Scene scene = new Scene(page);
         dialogStage.setScene(scene);
 
-        //enviando o obejto cliente para o controller
+        //enviando o objeto cliente para o controller
         FXMLAnchorPaneCadastroClienteDialogController controller = loader.getController();
         controller.setDialogStage(dialogStage);
         controller.setCliente(cliente);
@@ -248,5 +250,4 @@ public class FXMLAnchorPaneCadastroClienteController implements Initializable {
 
         return controller.isBtConfirmarClicked();
     }
-
 }

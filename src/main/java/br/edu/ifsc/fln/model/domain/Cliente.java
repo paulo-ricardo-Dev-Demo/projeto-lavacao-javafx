@@ -18,7 +18,6 @@ public abstract class Cliente implements IDados {
     private List<Veiculo> veiculos;
 
     public Cliente() {
-        this.dataCadastro = LocalDate.now();
         this.pontuacao = new Pontuacao();
         this.veiculos = new ArrayList<>();
     }
@@ -32,6 +31,9 @@ public abstract class Cliente implements IDados {
         //composição de Pontuacao com Cliente
         this.pontuacao = new Pontuacao();
         this.veiculos = new ArrayList<>();
+    }
+
+    public Cliente(int id, String nome, String celular, String email) {
     }
 
     @Override

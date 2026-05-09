@@ -20,6 +20,8 @@
                   <MenuItem fx:id="menuItemCadastroMarca" mnemonicParsing="false" onAction="#handleMenuItemCadastroMarca" text="Marca" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem fx:id="menuItemCadastroCor" mnemonicParsing="false" onAction="#handleMenuItemCadastroCor" text="Cor" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem fx:id="menuItemCadastroCliente" mnemonicParsing="false" onAction="#handleMenuItemCadastroCliente" text="Cliente" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Processos">
