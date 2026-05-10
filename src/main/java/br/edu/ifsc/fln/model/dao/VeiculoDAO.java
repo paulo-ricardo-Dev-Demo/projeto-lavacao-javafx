@@ -32,8 +32,8 @@ public class VeiculoDAO {
             stmt.setString(1, veiculo.getPlaca());
             stmt.setString(2, veiculo.getObservacoes());
             stmt.setInt(3,veiculo.getProprietario().getId());
-            stmt.setLong(3,veiculo.getCor().getId());
-            stmt.setInt(3,veiculo.getModelo().getId());
+            stmt.setLong(4,veiculo.getCor().getId());
+            stmt.setInt(5,veiculo.getModelo().getId());
             stmt.execute();
         }
         catch (SQLException ex) {
@@ -43,14 +43,16 @@ public class VeiculoDAO {
 
 
     public void alterar(Veiculo veiculo) {
-        String sql = "UPDATE veiculo SET placa=?, observacoes=?, id_cor=? WHERE id=?";
+        String sql = "UPDATE veiculo SET placa=?, observacoes=?, id_cor=?,id_cliente=?, id_modelo=? WHERE id=?";
 
         try {
             PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, veiculo.getPlaca());
             stmt.setString(2, veiculo.getObservacoes());
             stmt.setLong(3,veiculo.getCor().getId());
-            stmt.setInt(4,veiculo.getId());
+            stmt.setLong(4,veiculo.getProprietario().getId());
+            stmt.setInt(5,veiculo.getModelo().getId());
+            stmt.setInt(6,veiculo.getId());
             stmt.execute();
         } catch (SQLException ex) {
             Logger.getLogger(VeiculoDAO.class.getName()).log(Level.SEVERE, null, ex);

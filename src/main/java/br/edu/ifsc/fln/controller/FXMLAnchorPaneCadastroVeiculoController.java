@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import br.edu.ifsc.fln.model.domain.*;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -79,10 +80,10 @@ public class FXMLAnchorPaneCadastroVeiculoController implements Initializable {
     private TableColumn<Veiculo, String> tableColumnVeiculoPlaca;
 
     @FXML
-    private TableColumn<Modelo, String> tableColumnModeloDescricao;
+    private TableColumn<Veiculo, String> tableColumnModeloDescricao;
 
     @FXML
-    private TableColumn<Marca, String> tableColumnMarcaNome;
+    private TableColumn<Veiculo, String> tableColumnMarcaNome;
 
     @FXML
     private TableView<Veiculo> tableViewVeiculos;
@@ -108,8 +109,18 @@ public class FXMLAnchorPaneCadastroVeiculoController implements Initializable {
 
     public void carregarTableViewVeiculo() {
         tableColumnVeiculoPlaca.setCellValueFactory(new PropertyValueFactory<>("placa"));
-        tableColumnModeloDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao"));
-        tableColumnMarcaNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
+        tableColumnModeloDescricao.setCellValueFactory(cellData -> {
+            Veiculo veiculo = cellData.getValue();
+            String descModelo = veiculo.getModelo().getDescricao();
+
+            return new SimpleStringProperty(descModelo);
+        });
+        tableColumnMarcaNome.setCellValueFactory(cellData -> {
+            Veiculo veiculo = cellData.getValue();
+            String nomeMarca = veiculo.getModelo().getMarca().getNome();
+
+            return new SimpleStringProperty(nomeMarca);
+        });
 
         listaVeiculos = veiculoDAO.listar();
 
