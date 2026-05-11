@@ -13,6 +13,9 @@ import br.edu.ifsc.fln.model.domain.Cliente;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -114,7 +117,14 @@ public class FXMLAnchorPaneCadastroClienteController implements Initializable {
 
     public void carregarTableViewCliente() {
         tableColumnClienteNome.setCellValueFactory(new PropertyValueFactory<>("nome"));
-        tableColumnClienteDataCadastro.setCellValueFactory(new PropertyValueFactory<>("dataCadastro"));
+        tableColumnClienteDataCadastro.setCellValueFactory(cellData -> {
+            Cliente cliente = cellData.getValue();
+
+            DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String data = (cliente.getDataCadastro().format(formatador));
+
+            return new SimpleStringProperty(data);
+        });
         tableColumnClienteTipo.setCellValueFactory(cellData -> {
             Cliente cliente = cellData.getValue();
             String tipo = "";
@@ -127,7 +137,6 @@ public class FXMLAnchorPaneCadastroClienteController implements Initializable {
 
             return new SimpleStringProperty(tipo);
         });
-        tableColumnClienteDataCadastro.setCellValueFactory(new PropertyValueFactory<>("dataCadastro"));
 
         listaClientes = clienteDAO.listar();
 
@@ -141,7 +150,11 @@ public class FXMLAnchorPaneCadastroClienteController implements Initializable {
             lbClienteNome.setText(cliente.getNome());
             lbClienteCelular.setText(cliente.getCelular());
             lbClienteEmail.setText(cliente.getEmail());
-            lbClienteDataCadastro.setText(String.valueOf(cliente.getDataCadastro()));
+
+            DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            String dataCadastroFormatada = (cliente.getDataCadastro().format(formatador));
+
+            lbClienteDataCadastro.setText(dataCadastroFormatada);
             lbClientePontuacao.setText(String.valueOf(cliente.getPontuacao().saldo()));
             if (cliente instanceof PessoaJuridica) {
                 lbClienteTipo.setText("Pessoa Jurídica");
@@ -150,7 +163,9 @@ public class FXMLAnchorPaneCadastroClienteController implements Initializable {
             } else {
                 lbClienteTipo.setText("Pessoa Física");
                 lbClienteCpfCnpj.setText(((PessoaFisica)cliente).getCpf());
-                lbClienteDataNascInscEstadual.setText(String.valueOf(((PessoaFisica)cliente).getDataNascimento()));
+
+                String dataNascFormatada = ((PessoaFisica) cliente).getDataNascimento().format(formatador);
+                lbClienteDataNascInscEstadual.setText(dataNascFormatada);
             }
         } else {
             lbClienteId.setText("");
