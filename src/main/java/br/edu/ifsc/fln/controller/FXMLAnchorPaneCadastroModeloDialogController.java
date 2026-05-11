@@ -23,6 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -80,6 +81,18 @@ public class FXMLAnchorPaneCadastroModeloDialogController implements Initializab
         //Definindo qual item aparecerá selecionado por padrão
         cbCategoria.setValue("PADRAO");
         cbCombustivel.setValue("GASOLINA");
+
+        cbMarca.setConverter(new StringConverter<Marca>() {
+            @Override
+            public String toString(Marca marca) {
+                return marca == null? "" : marca.getNome();
+            }
+
+            @Override
+            public Marca fromString(String string) {
+                return null;
+            }
+        });
     }
 
     public boolean isBtConfirmarClicked() {

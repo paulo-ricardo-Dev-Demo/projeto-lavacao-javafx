@@ -38,7 +38,10 @@ public class Marca {
 
     @Override
     public String toString() {
-        return nome;
+        return "Marca{" +
+                "id=" + id +
+                ", nome='" + nome + '\'' +
+                '}';
     }
 
     public boolean equals(Object object) {

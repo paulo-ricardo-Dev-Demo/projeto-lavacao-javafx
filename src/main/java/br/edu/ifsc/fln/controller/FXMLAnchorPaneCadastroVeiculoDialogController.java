@@ -23,6 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 
 /**
  * FXML Controller class
@@ -79,6 +80,46 @@ public class FXMLAnchorPaneCadastroVeiculoDialogController implements Initializa
         cbCliente.getItems().addAll(clientes);
         cbCor.getItems().addAll(cores);
         cbModelo.getItems().addAll(modelos);
+
+        // Definindo o conversor personalizado aos choiceboxes
+        cbCliente.setConverter(new StringConverter<Cliente>() {
+            @Override
+            public String toString(Cliente cliente) {
+                // O que aparecerá na tela
+                return (cliente == null) ? "" : cliente.getNome();
+            }
+
+            @Override
+            public Cliente fromString(String string) {
+                return null;
+            }
+        });
+
+        cbModelo.setConverter(new StringConverter<Modelo>() {
+            @Override
+            public String toString(Modelo modelo) {
+                // O que aparecerá na tela
+                return (modelo == null) ? "" : modelo.getDescricao() + " - " + modelo.getMarca().getNome();
+            }
+
+            @Override
+            public Modelo fromString(String string) {
+                return null;
+            }
+        });
+
+        cbCor.setConverter(new StringConverter<Cor>() {
+            @Override
+            public String toString(Cor cor) {
+                // O que aparecerá na tela
+                return (cor == null) ? "" : cor.getNome();
+            }
+
+            @Override
+            public Cor fromString(String string) {
+                return null;
+            }
+        });
     }
 
     public boolean isBtConfirmarClicked() {
