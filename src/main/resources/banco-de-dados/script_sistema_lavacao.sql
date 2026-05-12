@@ -133,6 +133,8 @@ CREATE TABLE item_os (
 
 INSERT INTO cor(nome)
 VALUES ('Vermelho');
+INSERT INTO cor(nome)
+VALUES ('Preto');
 
 INSERT INTO marca(nome)
 VALUES ('Maserati');
@@ -142,7 +144,7 @@ insert into servico(descricao, valor) values ('polimento',100);
 insert into parametros_de_sistema values ('pontos',20);
 
 insert into modelo(descricao, marca_id, categoria) values
-        ("Maserati MC20", 1,'MEDIO');
+        ('MC20', 1,'MEDIO');
 
 insert into motor VALUES ((SELECT MAX(ID) FROM modelo), 630, 'GASOLINA');
 
@@ -176,3 +178,9 @@ insert into pessoa_juridica(id_cliente, cnpj, inscricao_estadual) values
 insert into pontuacao(id_cliente, quantidade) values
     ((SELECT max(id) from cliente),
      0);
+
+insert into veiculo(placa, observacoes, id_cliente, id_cor, id_modelo) values
+('GRE3R45', null, 1, 1, 1);
+
+insert into veiculo(placa, observacoes, id_cliente, id_cor, id_modelo) values
+    ('VAS4R56', null, 2, 2, 1);

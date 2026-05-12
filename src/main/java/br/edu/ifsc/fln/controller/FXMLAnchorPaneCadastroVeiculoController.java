@@ -109,12 +109,14 @@ public class FXMLAnchorPaneCadastroVeiculoController implements Initializable {
 
     public void carregarTableViewVeiculo() {
         tableColumnVeiculoPlaca.setCellValueFactory(new PropertyValueFactory<>("placa"));
+
         tableColumnModeloDescricao.setCellValueFactory(cellData -> {
             Veiculo veiculo = cellData.getValue();
             String descModelo = veiculo.getModelo().getDescricao();
 
             return new SimpleStringProperty(descModelo);
         });
+
         tableColumnMarcaNome.setCellValueFactory(cellData -> {
             Veiculo veiculo = cellData.getValue();
             String nomeMarca = veiculo.getModelo().getMarca().getNome();

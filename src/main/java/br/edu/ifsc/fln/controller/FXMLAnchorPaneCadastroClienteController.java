@@ -13,8 +13,6 @@ import br.edu.ifsc.fln.model.domain.Cliente;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
