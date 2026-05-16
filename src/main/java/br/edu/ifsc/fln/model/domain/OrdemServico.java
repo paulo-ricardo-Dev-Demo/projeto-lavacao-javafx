@@ -106,4 +106,12 @@ public class OrdemServico {
     public void setStatus(EStatus status) {
         this.status = status;
     }
+
+    public void setNumero(long numero) {
+        this.numero = numero;
+    }
+
+    public void setVeiculo(Veiculo veiculo) {
+        this.veiculo = veiculo;
+    }
 }
